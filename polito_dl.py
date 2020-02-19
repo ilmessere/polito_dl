@@ -131,36 +131,42 @@ def get_dlurl(lecture_url, login_cookie, dl_format='video'):
     with requests.session() as s:
         s.cookies = login_cookie
         r = s.get(lecture_url)
-        if "didattica.polito.it" in lecture_url:
-            if dl_format == 'video':
-                dlurl = re.findall('href="(.*)".*Video', r.text)[0]
-            if dl_format == 'iphone':
-                dlurl = re.findall('href="(.*)".*iPhone', r.text)[0]
-            if dl_format == 'audio':
-                dlurl = re.findall('href="(.*)".*Audio', r.text)[0]
-            r = s.get(
-                'https://didattica.polito.it'+html.unescape(dlurl),
-                allow_redirects=False)
-            dlurl = r.headers['location']
-        elif "elearning.polito.it" in lecture_url:
-            if dl_format == 'video':
-                dlurl = re.findall(
-                    'href="(download.php[^\"]*).*video1', r.text)[0]
-            if dl_format == 'iphone':
-                dlurl = re.findall(
-                    'href="(download.php[^\"]*).*video2', r.text)[0]
-            if dl_format == 'audio':
-                dlurl = re.findall(
-                    'href="(download.php[^\"]*).*video3', r.text)[0]
-            r = s.get(
-                'https://elearning.polito.it/gadgets/video/' +
-                html.unescape(dlurl), allow_redirects=False)
-            dlurl = r.headers['location']
-        else:
-            # Still under developement
-            new_domain_message()
-            exit(1)
-            dlurl = ""
+        print(re.findall('src="https:(.*).mp4"', r.text))
+        v = re.findall('src="https:(.*).mp4"', r.text)[0]
+        dlurl = f'https:{v}.mp4' 
+
+        #if "didattica.polito.it" in lecture_url:
+        #    if dl_format == 'video':
+        #        dlurl = re.findall('href="(.*)".*Video', r.text)[0]
+        #    if dl_format == 'iphone':
+        #        dlurl = re.findall('href="(.*)".*iPhone', r.text)[0]
+        #    if dl_format == 'audio':
+        #        dlurl = re.findall('href="(.*)".*Audio', r.text)[0]
+        #    r = s.get(
+        #        'https://didattica.polito.it'+html.unescape(dlurl),
+        #        allow_redirects=False)
+        #    print('https://didattica.polito.it'+html.unescape(dlurl))
+        #    print('response: ', r)
+        #    dlurl = r.headers['location']
+        #elif "elearning.polito.it" in lecture_url:
+        #    if dl_format == 'video':
+        #        dlurl = re.findall(
+        #            'href="(download.php[^\"]*).*video1', r.text)[0]
+        #    if dl_format == 'iphone':
+        #        dlurl = re.findall(
+        #            'href="(download.php[^\"]*).*video2', r.text)[0]
+        #    if dl_format == 'audio':
+        #        dlurl = re.findall(
+        #            'href="(download.php[^\"]*).*video3', r.text)[0]
+        #    r = s.get(
+        #        'https://elearning.polito.it/gadgets/video/' +
+        #        html.unescape(dlurl), allow_redirects=False)
+        #    dlurl = r.headers['location']
+        #else:
+        #    # Still under developement
+        #    new_domain_message()
+        #    exit(1)
+        #    dlurl = ""
     return dlurl
 
 
